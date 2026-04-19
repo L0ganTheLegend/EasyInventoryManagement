@@ -8,3 +8,7 @@ Created by: Logan Franke
 Launch command line version: java InventoryManager commandLineVersion
 
 GUI not yet implemented
+
+# Features
+* Linked list data storage
+* Easy to use system
