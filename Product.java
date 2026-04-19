@@ -48,6 +48,19 @@ public class Product {
 		}
 	}
 
+	void addItem( String addedDate, String expDate, int id ) {
+		Item newItem = new Item(addedDate, expDate, id);
+		if(first == null) {
+			first = new Node(newItem, null);
+		} else {
+			Node cursor = first;
+			while(cursor.next() != null) {
+				cursor = cursor.next();
+			}
+			cursor.setNext(new Node(newItem, null));
+		}
+	}
+
 	public boolean itemExists( int id ) {
 		Node cursor = first;
 		while(cursor != null) {

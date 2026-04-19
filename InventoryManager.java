@@ -257,9 +257,13 @@ public class InventoryManager {
 				String name = scanner.nextLine();
 				addProduct(name);
 				getProduct(name).setCurrId(Integer.parseInt(scanner.nextLine()));
-				// TODO: Add scanning items
-				scanner.nextLine(); // This is to skip past ENDOFTHEPRODUCT
-										  // Will need to be removed after item handling
+				do {
+					String added = scanner.nextLine();
+					if(added.equals("ENDOFTHEPRODUCT")) break;
+					String exp = scanner.nextLine();
+					int id = Integer.parseInt(scanner.nextLine());
+					getProduct(name).addItem(added, exp, id);
+				} while(true);
 			}	
 		} catch(IOException e) {
 			System.out.println("Save file failed to open!");
@@ -278,7 +282,12 @@ public class InventoryManager {
 			while(cursor != null) {
 				writer.println(cursor.product().getName());
 				writer.println(cursor.product().getCurrId());
-				// TODO: Add writing items
+				Item[] items = cursor.product().getItems();
+				for(Item i : items) {
+					writer.println(i.getAddedDate());
+					writer.println(i.getExpDate());
+					writer.println(i.getId());
+				}
 				writer.println("ENDOFTHEPRODUCT");
 				cursor = cursor.next();
 			}
