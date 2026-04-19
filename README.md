@@ -10,5 +10,5 @@ Launch command line version: java InventoryManager commandLineVersion
 GUI not yet implemented
 
 # Features
-* Linked List data storage
+* Linked list data storage
 * Easy to use system
