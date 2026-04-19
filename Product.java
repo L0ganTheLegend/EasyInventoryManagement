@@ -6,63 +6,110 @@ public class Product {
 		this.productName = name;
 	}
 	
-	Item[ ] items = { };
+	Node first = null;
+	int currId = 0;
 
+	class Node {
+		Item item;
+		Node next;
+		
+		Node(Item i, Node n) {
+			this.item = i;
+			this.next = n;
+		}
+
+		void setItem(Item i) {
+			this.item = i;
+		}
+
+		void setNext(Node n) {
+			this.next = n;
+		}
+
+		Item item() {
+			return item;
+		}
+
+		Node next() {
+			return next;
+		}
+	}
+	
 	public void addItem( String addedDate, String expDate ) {
-		int id = 0;
-		if ( items.length != 0 ) {
-			id = items[ items.length - 1 ].getId( ) + 1;
+		Item newItem = new Item(addedDate, expDate, currId++);
+		if(first == null) {
+			first = new Node(newItem, null);
+		} else {
+			Node cursor = first;
+			while(cursor.next() != null) {
+				cursor = cursor.next();
+			}
+			cursor.setNext(new Node(newItem, null));
 		}
-		Item item = new Item( addedDate, expDate, id );
-		Item[ ] newItems = new Item[ items.length + 1 ];
-		for ( int i = 0; i < items.length; i++ ) {
-			newItems[ i ] = items[ i ];
-		}
-		newItems[ items.length ] = item;
-		items = newItems;
 	}
 
 	public boolean itemExists( int id ) {
-		for ( Item i : items ) {
-			if ( i.getId( ) == id ) {
+		Node cursor = first;
+		while(cursor != null) {
+			if(id == cursor.item().getId()) {
 				return true;
 			}
+			cursor = cursor.next();
 		}
+
 		return false;
 	}
 	
 	public Item getItem ( int id ) {
 		if ( itemExists( id ) ) {
-			int reps = 0;
-			for ( Item i : items ) {
-				if ( i.getId( ) == id ) {
-					return items[ reps ];
+			Node cursor = first;
+			while(cursor != null) {
+				if(cursor.item().getId() == id) {
+					return cursor.item();
 				}
-				reps++;
+				cursor = cursor.next();
 			}
-			return null;
 		}
 		return null;
 	}
 
 	public boolean removeItem( int id ) {
 		if ( itemExists( id ) ) {
-			int index = 0;
-			Item[ ] newItems = new Item[ items.length - 1 ];
-			for ( Item i : items ) {
-				if ( i.getId( ) != id ) {
-					newItems[ index ] = i;
-					index++;
+			Node cursor = first;
+			while(cursor != null) {
+				if(cursor.item().getId() == id) {
+					if(cursor.equals(first)) {
+						first = first.next();
+					} else {
+						cursor = first;
+						while(cursor.next().item().getId() != id) {
+							cursor = cursor.next();
+						}
+						cursor.setNext(cursor.next().next());
+					}
+					
+					return true;
 				}
-			}
-			items = newItems;
-			return true;
+			}	
 		}
 		return false;
 	}
-
+	
 	public Item[ ] getItems( ) {
-		return items;
+		Node cursor = first;
+		int size = 0;
+		while(cursor != null) {
+			size++;
+			cursor = cursor.next();
+		}
+		Item[] items = new Item[size];
+		cursor = first;
+		for(int i = 0; i < size; i++) {
+			items[i] = cursor.item();
+			cursor = cursor.next();
+		}
+
+		return items;	
 	}
 
 	public String getName( ) {
@@ -76,6 +123,7 @@ public class Product {
 	}
 
 	public void printAllItems( ) {
+		Item[] items = getItems();
 		for ( Item i : items ) {
 			printItemInfo( i.getId( ) );
 		}

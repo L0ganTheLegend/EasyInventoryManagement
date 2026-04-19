@@ -2,7 +2,7 @@ import java.util.*;
 
 public class InventoryManager {
 	
-	Product[ ] products = { };
+	Node first = null;
 
 	public static void main ( String[ ] args ) {
 		if ( args[ 0 ].equals( "commandLineVersion" ) ) {
@@ -151,51 +151,93 @@ public class InventoryManager {
 		}
 	}
 
+	class Node {
+		Product p;
+		Node next;
+
+		Node(Product p, Node next) {
+			this.p = p;
+			this.next = next;
+		}
+
+		void setProduct(Product p) {
+			this.p = p;
+		}
+
+		void setNext(Node n) {
+			this.next = n;
+		}
+
+		Product product() {
+			return p;
+		}
+
+		Node next() {
+			return next;
+		}
+	}
+
 	public void addProduct( String name ) {
 		Product product = new Product( name );
-		Product[ ] newProducts = new Product[ products.length + 1 ];
-		int index = 0;
-		for ( Product p : products ) {
-			newProducts[ index ] = products[ index ];
-			index++;
+		if(first == null) {
+			first = new Node(product, null);
+		} else {
+			Node cursor = first;
+			while(cursor.next() != null) {
+				cursor = cursor.next();
+			}
+			cursor.setNext(new Node(product, null));
 		}
-		newProducts[ products.length ] = product;
-		products = newProducts;
 	}
 
 	public boolean productExists( String name ) {
-		for ( Product p : products ) {
-			if ( p.getName( ).equals( name ) ) {
+		Node cursor = first;
+		while(cursor != null) {
+			if(cursor.product().getName().equals(name)) {
 				return true;
 			}
+			cursor = cursor.next();
 		}
+
 		return false;
-	}
+	}	
 
 	public void removeProduct( String name ) {
-		int index = 0;
-		Product[ ] newProducts = new Product[ products.length - 1 ];
-		for ( Product p : products ) {
-			if ( !p.getName( ).equals( name ) ) {
-				newProducts[ index ] = p;
-				index++;
+		Node cursor = first;
+		while(cursor != null) {
+			if(cursor.product().getName().equals(name)) {
+				if(cursor.equals(first)) {
+					first = first.next();
+				} else {
+					cursor = first;
+					while(!cursor.next().product().getName().equals(name)) {
+						cursor = cursor.next();
+					}
+					cursor.setNext(cursor.next().next());
+				}
+				break;
 			}
+			cursor = cursor.next();
 		}
-		products = newProducts;
 	}
 
 	public void printProductNames( ) {
-		for ( Product p : products ) {
-			System.out.println( p.getName( ) );
+		Node cursor = first;
+		while(cursor != null) {
+			System.out.println(cursor.product().getName());
+			cursor = cursor.next();
 		}
 	}
 
 	public Product getProduct( String name ) {
-		for ( Product p : products ) {
-			if ( p.getName( ).equals( name ) ) {
-				return p;
+		Node cursor = first;
+		while(cursor != null) {
+			if(cursor.product().getName().equals(name)) {
+				return cursor.product();
 			}
+			cursor = cursor.next();
 		}
+
 		return null;
 	}
 }
