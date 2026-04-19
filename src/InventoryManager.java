@@ -6,7 +6,8 @@ public class InventoryManager {
 	Node first = null;
 
 	public static void main ( String[ ] args ) {
-		if ( args[ 0 ].equals( "commandLineVersion" ) ) {
+// --- Commenting out the "commandLineVersion" arg for official release---
+//		if ( args[ 0 ].equals( "commandLineVersion" ) ) {
 			String productName = null;
 			int id = 0;
 			InventoryManager im = new InventoryManager( );
@@ -151,7 +152,7 @@ public class InventoryManager {
 				}
 			} while ( !exit );
 			im.save();
-		}
+//		}
 	}
 
 	class Node {
