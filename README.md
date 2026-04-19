@@ -5,7 +5,7 @@ in Java.
 
 Created by: Logan Franke
 
-Launch (cmd): java -jar EasyInventoryManagement.jar
+Launch (cmd): **java -jar EasyInventoryManagement.jar**
 
 GUI not yet implemented
 
