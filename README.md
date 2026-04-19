@@ -12,3 +12,4 @@ GUI not yet implemented
 # Features
 * Linked list data storage
 * Easy to use system
+* Saving and loading data automatically on startup and close
