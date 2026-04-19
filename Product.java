@@ -128,4 +128,12 @@ public class Product {
 			printItemInfo( i.getId( ) );
 		}
 	}
+
+	int getCurrId() {
+		return currId;
+	}
+
+	void setCurrId(int id) {
+		currId = id;
+	}
 }

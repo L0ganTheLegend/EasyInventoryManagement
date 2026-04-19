@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.*;
 
 public class InventoryManager {
 	
@@ -9,6 +10,7 @@ public class InventoryManager {
 			String productName = null;
 			int id = 0;
 			InventoryManager im = new InventoryManager( );
+			im.initialize();
 			Scanner input = new Scanner( System.in );
 			System.out.println( "*** EASY INVENTORY MANAGEMENT ***" );
 			System.out.println( );
@@ -148,6 +150,7 @@ public class InventoryManager {
 						break;
 				}
 			} while ( !exit );
+			im.save();
 		}
 	}
 
@@ -240,4 +243,50 @@ public class InventoryManager {
 
 		return null;
 	}
+
+	void initialize() {
+		try {
+			File file = new File("inventory.data");
+			if(file.createNewFile()) {
+				return;
+			}
+
+			// Scan in products and items
+			Scanner scanner = new Scanner(file);
+			while(scanner.hasNextLine()) {
+				String name = scanner.nextLine();
+				addProduct(name);
+				getProduct(name).setCurrId(Integer.parseInt(scanner.nextLine()));
+				// TODO: Add scanning items
+				scanner.nextLine(); // This is to skip past ENDOFTHEPRODUCT
+										  // Will need to be removed after item handling
+			}	
+		} catch(IOException e) {
+			System.out.println("Save file failed to open!");
+			e.printStackTrace();
+		}
+	}
+
+	void save() {
+		try {
+			File file = new File("inventory.data");
+			new PrintWriter(file).close(); // Allegedly clears the file?
+			PrintWriter writer = new PrintWriter(file);
+
+			// Save products with items underneath
+			Node cursor = first;
+			while(cursor != null) {
+				writer.println(cursor.product().getName());
+				writer.println(cursor.product().getCurrId());
+				// TODO: Add writing items
+				writer.println("ENDOFTHEPRODUCT");
+				cursor = cursor.next();
+			}
+			writer.close();
+		} catch(FileNotFoundException e) {
+			System.out.println("Save file failed to open!");
+			e.printStackTrace();
+		}
+	}
+
 }
